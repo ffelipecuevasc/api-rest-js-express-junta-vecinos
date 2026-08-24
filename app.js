@@ -10,6 +10,7 @@ import indexRouter from './routes/index.js';
 import vecinosRouter from './routes/vecinos.js';
 import cuotasRouter from './routes/cuotas.js';
 import actasRouter from './routes/actas.js';
+import authRouter from './routes/auth.js';
 /* ----------------------------------------------
  * FIN - Importación de Enrutadores
  * ---------------------------------------------- */
@@ -43,6 +44,7 @@ app.use('/archivos', express.static(path.resolve('uploads')));
  * INICIO - Configuración de Rutas
  * ---------------------------------------------- */
 app.use('/', indexRouter);
+app.use('/auth', authRouter);
 app.use('/vecinos', vecinosRouter);
 app.use('/cuotas', cuotasRouter);
 app.use('/actas', actasRouter);

@@ -1,13 +1,21 @@
 import Vecino from '../models/Vecino.js';
 import Cuota from '../models/Cuota.js';
+import bcrypt from 'bcryptjs';
+
 import { eliminarVecinoConTransaccion } from '../services/vecinoService.js';
 
 export const crearVecino = async (req, res) => {
     try {
-        const nuevoVecino = await Vecino.create(req.body);
+        const { password, ...restoDatos } = req.body;
 
-        // Excluimos datos sensibles de la respuesta por buenas prácticas (aunque el hash aún no esté encriptado)
-        const { password_hash, ...vecinoData } = nuevoVecino.toJSON();
+        if (!password) {
+            return res.status(400).json({ error: 'El campo "password" es obligatorio.' });
+        }
+
+        const password_hash = await bcrypt.hash(password, 10);
+        const nuevoVecino = await Vecino.create({ ...restoDatos, password_hash });
+
+        const { password_hash: _omit, ...vecinoData } = nuevoVecino.toJSON();
 
         res.status(201).json({
             message: 'Vecino registrado exitosamente',
